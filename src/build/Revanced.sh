@@ -83,7 +83,7 @@ revanced_dl(){
 	revanced_dl
 	# Patch Tumblr:
 	get_patches_key "tumblr"
-	get_apk "com.tumblr" "tumblr" "tumblr" "tumblr-inc/tumblr/tumblr"
+	get_apk "com.tumblr" "tumblr" "tumblr" "tumblr-inc/tumblr/tumblr" "Bundle"
 	patch "tumblr" "revanced"
 }
 7() {
@@ -95,7 +95,7 @@ revanced_dl(){
 	# Patch Lightroom:
 	get_patches_key "lightroom"
 	version="9.2.2"
-	get_apk "com.adobe.lrmobile" "lightroom" "lightroom" "adobe/lightroom/lightroom" "arm64-v8a"
+	get_apk "com.adobe.lrmobile" "lightroom" "lightroom" "adobe/lightroom/lightroom" "Bundle"
 	patch "lightroom" "revanced"
 }
 case "$1" in
