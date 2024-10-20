@@ -85,6 +85,10 @@ revanced_dl(){
 	get_patches_key "tumblr"
 	get_apk "com.tumblr" "tumblr" "tumblr" "tumblr-inc/tumblr/tumblr" "Bundle"
 	patch "tumblr" "revanced"
+	# Patch SoundCloud:
+	get_patches_key "soundcloud"
+	get_apk "com.soundcloud.android" "soundcloud" "soundcloud-soundcloud" "soundcloud/soundcloud-soundcloud/soundcloud-soundcloud" "Bundle"
+	patch "soundcloud" "revanced"
 }
 7() {
 	revanced_dl
