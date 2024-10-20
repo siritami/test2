@@ -83,7 +83,6 @@ revanced_dl(){
 	revanced_dl
 	# Patch Tumblr:
 	get_patches_key "tumblr"
-	version="35.0.0.110"
 	get_apk "com.tumblr" "tumblr" "tumblr" "tumblr-inc/tumblr/tumblr"
 	patch "tumblr" "revanced"
 }
