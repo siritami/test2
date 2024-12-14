@@ -17,7 +17,7 @@ runs:
       uses: ncipollo/release-action@v1.14.0
       with:
         artifacts: |
-          release\*.apk
+          D:\a\test2\test2\release\*.apk
         name: Revanced & Revanced Extended
         tag: all
         bodyFile: ${{ github.workspace }}-CHANGELOG.txt
