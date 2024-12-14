@@ -19,7 +19,7 @@ Invoke-WebRequest -Uri "https://cdn.azul.com/zulu/bin/zulu17.54.21-ca-jdk17.0.13
 Invoke-WebRequest -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/download/v2.0.18/AutoHotkey_2.0.18_setup.exe" -OutFile "AutoHotKey.exe"
 
 msiexec /i zulu.msi ADDLOCAL=FeatureJavaHome,FeatureEnvironment /qn
-AutoHotKey.exe /silent /Elevate
+Start-Process "AutoHotKey.exe" -ArgumentList "/silent", "/Elevate"
 Start-Process "C:\Program Files\AutoHotkey\AutoHotkey.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
 
 #patch "youtube" "revanced-extended"
