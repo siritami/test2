@@ -60,7 +60,7 @@ jobs:
       - name: Patch apk
         id: patch-rve
         run: |
-          Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
+          src/build/Revanced-Extended.ps1
       - name: Cache
         uses: actions/upload-artifact@v4
         with:
