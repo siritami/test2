@@ -15,6 +15,6 @@ function patch {
     }
 }
 if (-not (Test-Path "release")) {
-    New-Item -Path "release" -ItemType Directory
+    New-Item -Path "release" -ItemType Directory -Force | Out-Null
 }
 patch "youtube" "revanced-extended"
