@@ -192,7 +192,7 @@ get_apk() {
 	fi
 	export version="$version"
 	local attempt
-	if [ $lock_version == "1" ]; then
+	if [[ $lock_version == "1" ]]; then
 		attempt=0
 	else
 		attempt=10
