@@ -28,8 +28,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
-      - name: Preparing to patch
-        uses: ./.github/actions/preparing
       - name: Check github connection
         id: check-gh-rve
         run: bash src/etc/connection.sh
