@@ -171,18 +171,32 @@ get_apk() {
 			*) url_regexp='$5'"[^@]*$7"''"[^@]*$6"'</div>[^@]*@\([^"]*\)' ;;
 		esac 
 	fi
+	if [ -f "$version" ]; then
+		lock_version=1
+	fi
 	if [ -z "$version" ] && [ "$version" != "latest" ]; then
 		if [[ $(ls revanced-cli-*.jar) =~ revanced-cli-([0-9]+) ]]; then
 			num=${BASH_REMATCH[1]}
 			if [ $num -ge 5 ]; then
 				version=$(java -jar *cli*.jar list-patches --with-packages --with-versions *.rvp | awk -v pkg="$1" 'BEGIN { found = 0 } /^Index:/ { found = 0 } /Package name: / { if ($3 == pkg) { found = 1 } } /Compatible versions:/ { if (found) { getline; latest_version = $1; while (getline && $1 ~ /^[0-9]+\./) { latest_version = $1 } print latest_version; exit } }')
+				if [ -f "$version" ]; then
+					lock_version=1
+				fi
 			else
 				version=$(jq -r '[.. | objects | select(.name == "'$1'" and .versions != null) | .versions[]] | reverse | .[0] // ""' *.json | uniq)
+				if [ -f "$version" ]; then
+					lock_version=1
+				fi
 			fi
 		fi
 	fi
 	export version="$version"
-	local attempt=0
+	local attempt
+	if [ $lock_version == "1" ]; then
+		attempt=0
+	else
+		attempt=10
+	fi
 	while [ $attempt -lt 10 ]; do
 		if [[ -z $version ]] || [ $attempt -ne 0 ]; then
 			local list_vers v _versions=() IFS=$'\n'

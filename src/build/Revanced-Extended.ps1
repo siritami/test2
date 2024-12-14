@@ -3,12 +3,12 @@ Set-ExecutionPolicy RemoteSigned
 function patch {
     param(
         [string]$apkName,
-        [string]$patchOption
+        [string]$alias
     )
     
     $apkPath = "$apkName.apk"
     if (Test-Path $apkPath) {
-        java -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$patchOption --keystore=src/_ks.keystore -o "release\$apkName-$patchOption.apk" --purge $apkPath
+        java -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$alias --keystore=src/_ks.keystore -o "release\$apkName-$alias.apk" --purge $apkPath
     } else {
         Write-Host "[-] Not found $apkName"
         exit 1
