@@ -61,7 +61,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: download
-          key: download-cache-${{ github.ref }}
+          key: apkm-cache
 
       - name: Package Manager
         run: |
