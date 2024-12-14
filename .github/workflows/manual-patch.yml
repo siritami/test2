@@ -41,9 +41,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: download
-          key: download-${{ hashFiles('download/**') }}
           restore-keys: |
-            download-
+            download-${{ hashFiles('download/**') }}
       - name: Releasing APK files
         id: release-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
