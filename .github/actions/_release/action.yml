@@ -14,11 +14,10 @@ runs:
         [Revanced Extended For Android 5:](https://github.com/d4n3436/revanced-patches-android5/releases)
         "> ${{ github.workspace }}-CHANGELOG.txt
     - name: Release
-      uses: ncipollo/release-action@v1.14.0
+      uses: softprops/action-gh-release@v2
       with:
-        artifacts: |
+        files: |
           D:\a\test2\test2\release\*.apk
         name: Revanced & Revanced Extended
-        tag: all
-        bodyFile: ${{ github.workspace }}-CHANGELOG.txt
-        allowUpdates: true
+        tag_name: all
+        body_path: ${{ github.workspace }}-CHANGELOG.txt
