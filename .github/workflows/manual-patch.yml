@@ -54,9 +54,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Cache
-      - name: Setup JDK & AHK
-        run: |
-          src/etc/setup_zulu_ahk.ps1
+#      - name: Setup JDK & AHK
+#        run: |
+#          src/etc/setup_zulu_ahk.ps1
+      - name: Preparing to patch
+        uses: ./.github/actions/preparing
       - name: Patch apk
         id: patch-rve
         run: |
