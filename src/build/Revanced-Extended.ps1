@@ -28,15 +28,12 @@ function setup-zulu {
 	if (-not (Test-Path -Path $Directory)) {
 		New-Item -ItemType Directory -Path $Directory
 	}
-
 	$ExtractDirectory = [System.IO.Path]::GetDirectoryName($ExtractPath)
 	if (-not (Test-Path -Path $ExtractDirectory)) {
 		New-Item -ItemType Directory -Path $ExtractDirectory
 	}
-
 	Invoke-WebRequest -Uri $Url -OutFile $DownloadPath
 	Write-Host "Download complete: $DownloadPath"
-
 	Start-Process msiexec.exe -ArgumentList "/a `"$DownloadPath`" /qb TARGETDIR=`"$ExtractPath`"" -NoNewWindow -Wait
 	Write-Host "Extraction complete: $ExtractPath"
 
