@@ -1,21 +1,34 @@
-function Update-Environment {
-    $locations = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
-                 'HKCU:\Environment'
+function Update-EnvVarsFromRegistry {
+    param (
+        [switch]$IncludeUserVars,
+        [switch]$IncludeSystemVars
+    )
 
-    $locations | ForEach-Object {
-        $k = Get-Item $_
-        $k.GetValueNames() | ForEach-Object {
-            $name  = $_
-            $value = $k.GetValue($_)
-
-            if ($userLocation -and $name -ieq 'PATH') {
-                Env:\Path += ";$value"
-            } else {
-                Set-Item -Path Env:\$name -Value $value
+    try {
+        # Load user environment variables from registry
+        if ($IncludeUserVars) {
+            $userVars = Get-ItemProperty -Path "HKCU:\Environment"
+            foreach ($var in $userVars.PSObject.Properties) {
+                # Update session environment variable
+                $env[$var.Name] = $var.Value
+                Write-Host "Updated: $($var.Name) = $($var.Value)"
             }
         }
 
-        $userLocation = $true
+        # Load system environment variables from registry (requires admin privileges)
+        if ($IncludeSystemVars) {
+            $systemVars = Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Environment"
+            foreach ($var in $systemVars.PSObject.Properties) {
+                # Update session environment variable
+                $env[$var.Name] = $var.Value
+                Write-Host "Updated: $($var.Name) = $($var.Value)"
+            }
+        }
+
+        Write-Host "Environment variables updated successfully."
+    }
+    catch {
+        Write-Error "An error occurred: $_"
     }
 }
 
@@ -27,4 +40,5 @@ Invoke-WebRequest -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/downlo
 msiexec /i zulu.msi ADDLOCAL=FeatureJavaHome,FeatureEnvironment /qn
 Expand-Archive -Path "D:\a\test2\test2\AutoHotkey.zip" -DestinationPath "." -Force
 Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
-Update-Environment
+Update-EnvVarsFromRegistry -IncludeSystemVars
+Update-EnvVarsFromRegistry -IncludeUserVars
