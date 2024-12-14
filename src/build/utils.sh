@@ -171,9 +171,6 @@ get_apk() {
 			*) url_regexp='$5'"[^@]*$7"''"[^@]*$6"'</div>[^@]*@\([^"]*\)' ;;
 		esac 
 	fi
-	if [ -f "$version" ]; then
-		lock_version=1
-	fi
 	if [ -z "$version" ] && [ "$version" != "latest" ]; then
 		if [[ $(ls revanced-cli-*.jar) =~ revanced-cli-([0-9]+) ]]; then
 			num=${BASH_REMATCH[1]}
