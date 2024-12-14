@@ -37,11 +37,11 @@ jobs:
         id: patch-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
         run: bash src/build/Revanced-Extended.sh 1
-      - name: Cache download folder
-        uses: actions/cache@v3
+      - name: Cache
+        uses: actions/upload-artifact@v2
         with:
+          name: Cache-apk
           path: download
-          key: download-${{ hashFiles('download/**') }}
       - name: Releasing APK files
         id: release-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
@@ -55,11 +55,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Restore cache
-        uses: actions/cache@v3
+      - name: Cache
+        uses: actions/download-artifact@v2
         with:
-          path: download
-          key: download-${{ hashFiles('download/**') }}
+          name: Cache-apk
 
       - name: Package Manager
         run: |
