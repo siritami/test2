@@ -1,32 +1,14 @@
 function Update-EnvironmentVariables {
-    # Clear existing session environment variables
-    $envVariables = [System.Environment]::GetEnvironmentVariables("User")
-    foreach ($key in $envVariables.Keys) {
-        Remove-Item -Path Env:\${key} -ErrorAction SilentlyContinue
-    }
-
-    # Reload user environment variables
-    foreach ($key in $envVariables.Keys) {
-        $value = $envVariables[$key]
-        if ($null -ne $value) {
-            [Environment]::SetEnvironmentVariable($key, $value, "Process")
-            ${env:$key} = $value
-        }
-    }
-
-    # Reload system environment variables
-    $sysEnvVariables = [System.Environment]::GetEnvironmentVariables("Machine")
-    foreach ($key in $sysEnvVariables.Keys) {
-        if (-not ${env:$key}) { # Avoid overwriting user-level variables
-            $value = $sysEnvVariables[$key]
-            if ($null -ne $value) {
-                [Environment]::SetEnvironmentVariable($key, $value, "Process")
-                ${env:$key} = $value
-            }
-        }
-    }
-
-    Write-Output "Environment variables have been updated in the current session."
+'Start-Process', [Diagnostics.Process]::GetCurrentProcess().ProcessName,
+'-UseNewEnvironment -NoNewWindow -Wait -Args ''-c'',',
+'''Get-ChildItem env: | &{process{ $_.Key + [char]9 + $_.Value }}'''
+))) | &{process{
+  [Environment]::SetEnvironmentVariable(
+    $_.Split("`t")[0],
+    $_.Split("`t")[1],
+    'Process'
+  )
+}}
 }
 
 New-Item -Path "release" -ItemType Directory -Force | Out-Null
