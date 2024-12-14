@@ -1,3 +1,24 @@
+function Update-Environment {
+    $locations = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+                 'HKCU:\Environment'
+
+    $locations | ForEach-Object {
+        $k = Get-Item $_
+        $k.GetValueNames() | ForEach-Object {
+            $name  = $_
+            $value = $k.GetValue($_)
+
+            if ($userLocation -and $name -ieq 'PATH') {
+                Env:\Path += ";$value"
+            } else {
+                Set-Item -Path Env:\$name -Value $value
+            }
+        }
+
+        $userLocation = $true
+    }
+}
+
 New-Item -Path "release" -ItemType Directory -Force | Out-Null
 
 Invoke-WebRequest -Uri "https://cdn.azul.com/zulu/bin/zulu17.54.21-ca-jdk17.0.13-win_x64.msi" -OutFile "zulu.msi"
@@ -6,3 +27,4 @@ Invoke-WebRequest -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/downlo
 msiexec /i zulu.msi ADDLOCAL=FeatureJavaHome,FeatureEnvironment /qn
 Expand-Archive -Path "D:\a\test2\test2\AutoHotkey.zip" -DestinationPath "." -Force
 Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
+Update-Environment
