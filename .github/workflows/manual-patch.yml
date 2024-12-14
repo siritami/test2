@@ -68,7 +68,7 @@ jobs:
       - name: Cache
         uses: actions/upload-artifact@v4
         with:
-          name: Cache
+          name: Release
           path: |
             release/*.apk
   release_rve:
@@ -81,7 +81,7 @@ jobs:
       - name: Cache
         uses: actions/download-artifact@v4
         with:
-          name: Cache-apk
+          name: Release
           path: release
       - name: Releasing APK files
         uses: ./.github/actions/release
