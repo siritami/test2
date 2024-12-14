@@ -7,9 +7,14 @@ function patch {
     )
     
     $apkPath = "$apkName.apk"
-	$javaPath = "download\zulu-jdk-win_x64\Program Files\Zulu\zulu*\bin\java.exe"
+	$javaPath = Get-ChildItem -Path "download\zulu-jdk-win_x64\Program Files\Zulu\zulu*\bin\java.exe" -Recurse | Select-Object -First 1
     if (Test-Path $apkPath) {
-        $javaPath -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$alias --keystore=src/_ks.keystore -o "release\$apkName-$alias.apk" --purge $apkPath
+        if ($javaPath) {
+            & $javaPath -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$alias --keystore=src/_ks.keystore -o "release\$apkName-$alias.apk" --purge $apkPath
+        } else {
+            Write-Host "[-] Java executable not found."
+            exit 1
+        }
     } else {
         Write-Host "[-] Not found $apkName"
         exit 1
