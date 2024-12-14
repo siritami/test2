@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir ./release download
+mkdir release download
 
 #Setup pup for download apk files
 #wget -q -O ./pup.zip https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip
@@ -254,7 +254,7 @@ patch() {
 				fi
 			fi
 		fi
-		eval java -jar *cli*.jar $p$b $m$opt--out=./release/$1-$2.apk$excludePatches$includePatches --keystore=./src/$ks.keystore $pu $adownload/$1.apk
+		eval java -jar *cli*.jar $p$b $m$opt--out=release/$1-$2.apk$excludePatches$includePatches --keystore=./src/$ks.keystore $pu "$a"download/$1.apk
   		unset version
 		unset excludePatches
 		unset includePatches
