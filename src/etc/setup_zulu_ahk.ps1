@@ -2,7 +2,7 @@ function Update-EnvironmentVariables {
     # Clear existing session environment variables
     $envVariables = [System.Environment]::GetEnvironmentVariables("User")
     foreach ($key in $envVariables.Keys) {
-        Remove-Item -Path Env:\$key -ErrorAction SilentlyContinue
+        Remove-Item -Path Env:\${key} -ErrorAction SilentlyContinue
     }
 
     # Reload user environment variables
@@ -10,18 +10,18 @@ function Update-EnvironmentVariables {
         $value = $envVariables[$key]
         if ($null -ne $value) {
             [Environment]::SetEnvironmentVariable($key, $value, "Process")
-            $env:$key = $value
+            ${env:$key} = $value
         }
     }
 
     # Reload system environment variables
     $sysEnvVariables = [System.Environment]::GetEnvironmentVariables("Machine")
     foreach ($key in $sysEnvVariables.Keys) {
-        if (-not $env:$key) { # Avoid overwriting user-level variables
+        if (-not ${env:$key}) { # Avoid overwriting user-level variables
             $value = $sysEnvVariables[$key]
             if ($null -ne $value) {
                 [Environment]::SetEnvironmentVariable($key, $value, "Process")
-                $env:$key = $value
+                ${env:$key} = $value
             }
         }
     }
