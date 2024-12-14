@@ -18,4 +18,4 @@ if (-not (Test-Path "release")) {
 Invoke-WebRequest -Uri "https://cdn.azul.com/zulu/bin/zulu17.54.21-ca-jdk17.0.13-win_x64.msi" -OutFile "zulu.msi"
 msiexec /i zulu.msi ADDLOCAL=FeatureJavaHome,FeatureEnvironment /qn
 
-patch "youtube" "revanced-extended"
+#patch "youtube" "revanced-extended"
