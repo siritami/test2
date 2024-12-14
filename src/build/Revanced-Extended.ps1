@@ -19,6 +19,6 @@ Invoke-WebRequest -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/downlo
 
 msiexec /i zulu.msi ADDLOCAL=FeatureJavaHome,FeatureEnvironment /qn
 Expand-Archive -Path "AutoHotkey.zip" -DestinationPath "." -Force
-#Start-Process "AutoHotkeyU64.exe" -ArgumentList "src\build\Revanced-Extended.ahk"
+Start-Process "AutoHotkey64.exe" -ArgumentList "src\build\Revanced-Extended.ahk"
 
 #patch "youtube" "revanced-extended"

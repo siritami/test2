@@ -6,7 +6,7 @@ WinWaitActive "ahk_class ConsoleWindowClass"
 Send "cd D:\a\test2\test2\{Enter}"
 
 ; Type the second command and press Enter
-Send "java -jar revanced-cli.jar patch -p patches.rvp -o youtube-revanced-extended.apk youtube.apk{Enter}"
+Send "java -jar revanced-cli.jar patch -p patches.rvp -o D:\a\test2\test2\release\youtube-revanced-extended.apk youtube.apk{Enter}"
 
 ; Stop the script
 ExitApp
