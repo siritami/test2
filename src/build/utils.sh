@@ -192,7 +192,7 @@ get_apk() {
 	if [[ $lock_version == "1" ]]; then
 		attempt=9
 	else
-		attempt=1
+		attempt=0
 	fi
 	while [ $attempt -lt 10 ]; do
 		if [[ -z $version ]] || [ $attempt -ne 0 ]; then
