@@ -42,7 +42,7 @@ jobs:
         with:
           name: Cache-apk
           path: |
-            download
+            download/*.apk
       - name: Releasing APK files
         id: release-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
