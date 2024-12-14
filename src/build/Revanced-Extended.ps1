@@ -1,3 +1,5 @@
+Set-ExecutionPolicy RemoteSigned
+
 function patch {
     param(
         [string]$apkName,
