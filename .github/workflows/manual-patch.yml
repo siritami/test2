@@ -37,12 +37,14 @@ jobs:
         id: patch-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
         run: bash src/build/Revanced-Extended.sh 1
-      - name: Cache
-        if: steps.check-gh-rve.outputs.internet_error == '0'
+      - name: Cache download folder
+        id: cache-download
         uses: actions/cache@v3
         with:
           path: download
-          key: apkm-cache
+          key: ${{ runner.os }}-download-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-download-
       - name: Releasing APK files
         id: release-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
@@ -56,12 +58,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Cache
-        id: restore-cache
+      - name: Restore download folder cache
         uses: actions/cache@v3
         with:
           path: download
-          key: apkm-cache
+          key: ${{ runner.os }}-download-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-download-
 
       - name: Package Manager
         run: |
