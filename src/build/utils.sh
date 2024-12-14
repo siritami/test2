@@ -183,10 +183,8 @@ get_apk() {
 	fi
 	export version="$version"
     if [[ -n "$version" ]]; then
-        green_log "[+] Using version: $version"
         version=$(echo "$version" | tr -d ' ' | sed 's/\./-/g')
         green_log "[+] Downloading $3 version: $version $5 $6 $7"
-
         if [[ $5 == "Bundle" ]] || [[ $5 == "Bundle_extract" ]]; then
             local base_apk="$2.apkm"
         else
@@ -196,14 +194,12 @@ get_apk() {
                               "$url_regexp" \
                               "$base_apk" \
                               "$5")
-
         if [[ -f "download/$base_apk" ]]; then
             green_log "[+] Successfully downloaded $2"
         else
             red_log "[-] Failed to download $2"
             return 1
         fi
-
         if [[ $5 == "Bundle" ]]; then
             green_log "[+] Merge splits apk to standalone apk"
             java -jar $APKEditor m -i download/$2.apkm -o download/$2.apk > /dev/null 2>&1
