@@ -14,7 +14,7 @@ revanced_dl(){
 	get_apk "com.google.android.youtube" "youtube" "youtube" "google-inc/youtube/youtube" "Bundle_extract"
 	split_editor "youtube" "youtube"
 	mv *.rvp download/patches.rvp
-	mv *.jar download/cli.jar
+	mv *cli* download/revanced-cli.jar
 }
 2() {
 	revanced_dl
