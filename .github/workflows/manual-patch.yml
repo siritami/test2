@@ -56,11 +56,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Cache
-      - name: Package Manager
-        run: |
-             $global:progressPreference = 'silentlyContinue'
-             Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
-             choco install zulu
       - name: Patch apk
         id: patch-rve
         run: powershell.exe src/build/Revanced-Extended.ps1
