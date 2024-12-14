@@ -24,7 +24,7 @@ red_log() {
 
 # Download Github assets requirement:
 dl_gh() {
-	if [ "$3" == "prerelease" ]; then
+	if [ $3 == "prerelease" ]; then
 		local repo=$1
 		for repo in $1 ; do
 			local owner=$2 tag=$3 found=0 assets=0
@@ -54,11 +54,10 @@ dl_gh() {
 				if [[ $line == *"\"browser_download_url\":"* ]]; then
 					if [ $assets -eq 1 ]; then
 						url=$(echo $line | cut -d '"' -f 4)
-						if [[ $url != *.asc ]]; then
+							if [[ $url != *.asc ]]; then
 							name=$(basename "$url")
 							wget -q -O "$name" "$url"
 							green_log "[+] Downloading $name from $owner"
-							echo "[INFO] Downloaded file to $(pwd)/$name"
 						fi
 					fi
 				fi
@@ -79,7 +78,6 @@ dl_gh() {
    				if [[ $url != *.asc ]]; then
 					green_log "[+] Downloading $names from $2"
 					wget -q -O "$names" $url
-					echo "[INFO] Downloaded file to $(pwd)/$names"
      				fi
 			done
 		done
