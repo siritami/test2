@@ -5,9 +5,10 @@ function patch {
         [string]$apkName,
         [string]$alias
     )
+    
     $apkPath = "$apkName.apk"
     if (Test-Path $apkPath) {
-        java -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$alias -o "$apkName-$alias.apk" $apkPath
+        java -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$alias --keystore=src/_ks.keystore -o "release\$apkName-$alias.apk" --purge $apkPath
     } else {
         Write-Host "[-] Not found $apkName"
         exit 1

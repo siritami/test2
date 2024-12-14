@@ -52,12 +52,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
-      - name: Preparing to patch
-        uses: ./.github/actions/preparing
       - name: Cache
         uses: actions/download-artifact@v4
         with:
           name: Cache
+      - name: Package Manager
+        run: |
+             $global:progressPreference = 'silentlyContinue'
+             Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+             choco install zulu
       - name: Patch apk
         id: patch-rve
         run: powershell.exe src/build/Revanced-Extended.ps1
@@ -66,7 +69,7 @@ jobs:
         with:
           name: Release
           path: |
-            *.apk
+            release/*.apk
   release_rve:
     name: Release Revanced Extended Stable
     needs: patch_rve_
