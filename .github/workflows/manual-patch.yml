@@ -41,12 +41,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Cache-apk
-          path: download
+          path: |
+            download
       - name: Releasing APK files
         id: release-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
         uses: ./.github/actions/release
-  patch_rve_windows:
+  patch_rve_:
     name: Patch Revanced Extended Stable
     needs: patch_rve
     if: ${{ github.event.inputs.org == 'Revanced Extended' || inputs.org == 'Revanced Extended' }}
@@ -54,12 +55,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
-
+      - name: Preparing to patch
+        uses: ./.github/actions/preparing
       - name: Cache
         uses: actions/download-artifact@v4
         with:
           name: Cache-apk
-
       - name: Package Manager
         run: |
              $global:progressPreference = 'silentlyContinue'
