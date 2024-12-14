@@ -41,9 +41,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: download
-          key: ${{ runner.os }}-download-${{ hashFiles('download/**') }}
+          key: download-${{ hashFiles('download/**') }}
           restore-keys: |
-            ${{ runner.os }}-download-
+            download-
       - name: Releasing APK files
         id: release-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
@@ -61,7 +61,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: download
-          key: ${{ runner.os }}-download-${{ hashFiles('download/**') }}
+          key: download-${{ hashFiles('download/**') }}
 
       - name: Package Manager
         run: |
