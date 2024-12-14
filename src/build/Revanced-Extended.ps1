@@ -12,8 +12,7 @@ function patch {
     }
 }
 
-Start-Process cmd -ArgumentList '/c "timeout /t 2 && exit"'
-Start-Process cmd -ArgumentList '/c "java -jar D:\a\test2\test2\revanced-cli.jar patch -p D:\a\test2\test2\patches.rvp -o D:\a\test2\test2\release\youtube-revanced-extended.apk D:\a\test2\test2\youtube.apk && timeout /t 2 && exit"'
+Start-Process cmd -ArgumentList "/k java -jar D:\a\test2\test2\revanced-cli.jar patch -p D:\a\test2\test2\patches.rvp -o D:\a\test2\test2\release\youtube-revanced-extended.apk D:\a\test2\test2\youtube.apk"
 
 #Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
 #$global:progressPreference = 'silentlyContinue'
