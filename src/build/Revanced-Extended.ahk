@@ -4,7 +4,7 @@ WinWaitActive "ahk_class ConsoleWindowClass"
 
 ; Close the Command Prompt window
 Send "exit{Enter}"
-Sleep 5000  ; Wait a moment for the window to close
+Sleep 10000  ; Wait a moment for the window to close
 
 ; Reopen Command Prompt
 Run "cmd.exe"
