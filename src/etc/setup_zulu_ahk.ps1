@@ -1,35 +1,32 @@
-function Update-EnvVarsFromRegistry {
-    param (
-        [switch]$IncludeUserVars,
-        [switch]$IncludeSystemVars
-    )
+function Update-EnvironmentVariables {
+    # Clear existing session environment variables
+    $envVariables = [System.Environment]::GetEnvironmentVariables("User")
+    foreach ($key in $envVariables.Keys) {
+        Remove-Item -Path Env:\$key -ErrorAction SilentlyContinue
+    }
 
-    try {
-        # Load user environment variables from registry
-        if ($IncludeUserVars) {
-            $userVars = Get-ItemProperty -Path "HKCU:\Environment"
-            foreach ($var in $userVars.PSObject.Properties) {
-                # Update session environment variable
-                $env[$var.Name] = $var.Value
-                Write-Host "Updated: $($var.Name) = $($var.Value)"
+    # Reload user environment variables
+    foreach ($key in $envVariables.Keys) {
+        $value = $envVariables[$key]
+        if ($null -ne $value) {
+            [Environment]::SetEnvironmentVariable($key, $value, "Process")
+            $env:$key = $value
+        }
+    }
+
+    # Reload system environment variables
+    $sysEnvVariables = [System.Environment]::GetEnvironmentVariables("Machine")
+    foreach ($key in $sysEnvVariables.Keys) {
+        if (-not $env:$key) { # Avoid overwriting user-level variables
+            $value = $sysEnvVariables[$key]
+            if ($null -ne $value) {
+                [Environment]::SetEnvironmentVariable($key, $value, "Process")
+                $env:$key = $value
             }
         }
-
-        # Load system environment variables from registry (requires admin privileges)
-        if ($IncludeSystemVars) {
-            $systemVars = Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Environment"
-            foreach ($var in $systemVars.PSObject.Properties) {
-                # Update session environment variable
-                $env[$var.Name] = $var.Value
-                Write-Host "Updated: $($var.Name) = $($var.Value)"
-            }
-        }
-
-        Write-Host "Environment variables updated successfully."
     }
-    catch {
-        Write-Error "An error occurred: $_"
-    }
+
+    Write-Output "Environment variables have been updated in the current session."
 }
 
 New-Item -Path "release" -ItemType Directory -Force | Out-Null
@@ -40,5 +37,4 @@ Invoke-WebRequest -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/downlo
 msiexec /i zulu.msi ADDLOCAL=FeatureJavaHome,FeatureEnvironment /qn
 Expand-Archive -Path "D:\a\test2\test2\AutoHotkey.zip" -DestinationPath "." -Force
 Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
-Update-EnvVarsFromRegistry -IncludeSystemVars
-Update-EnvVarsFromRegistry -IncludeUserVars
+Update-EnvironmentVariables
