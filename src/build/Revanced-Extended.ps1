@@ -6,24 +6,41 @@ function patch {
         [string]$alias
     )
     
-    # Define the path to the Java executable
-    $javaPath = Get-ChildItem -Path "download\zulu-jdk-win_x64\Program Files\Zulu\zulu*\bin" -Filter "java.exe" -Recurse | Select-Object -First 1
-    
-    if ($javaPath) {
-        $apkPath = "$apkName.apk"
-        if (Test-Path $apkPath) {
-            & "$javaPath" -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$alias --keystore=src/_ks.keystore -o "release\$apkName-$alias.apk" --purge $apkPath
-        } else {
-            Write-Host "[-] Not found $apkName"
-            exit 1
-        }
+    $apkPath = "$apkName.apk"
+    if (Test-Path $apkPath) {
+        java -jar revanced-cli.jar patch -p patches.rvp --legacy-options=$alias --keystore=src/_ks.keystore -o "release\$apkName-$alias.apk" --purge $apkPath
     } else {
-        Write-Host "[-] Java executable not found"
+        Write-Host "[-] Not found $apkName"
         exit 1
     }
 }
-$URL = (Invoke-RestMethod -Uri "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?jdk_version=21&bundle_type=jdk&javafx=false&ext=msi&os=windows&arch=x86&hw_bitness=64" -UseBasicParsing -Verbose).url
-Invoke-RestMethod -Uri $URL -Outfile "download\zulu-jdk-win_x64.msi" -UseBasicParsing -Verbose
-Start-Process "msiexec" -ArgumentList "/a `"download\zulu-jdk-win_x64.msi`"", "TARGETDIR=`"download\zulu-jdk-win_x64`"", "/qb" -Wait
+function setup-zulu {
+	$Url = "https://cdn.azul.com/zulu/bin/zulu17.54.21-ca-jdk17.0.13-win_x64.msi"
+	$DownloadPath = "C:\path\to\your\download\folder\zulu-jdk-win_x64.msi"
+	$ExtractPath = "C:\path\to\your\download\folder\zulu-jdk-win_x64"
+	$Directory = [System.IO.Path]::GetDirectoryName($DownloadPath)
+	if (-not (Test-Path -Path $Directory)) {
+		New-Item -ItemType Directory -Path $Directory
+	}
 
+	# Create the extraction folder if it doesn't exist
+	$ExtractDirectory = [System.IO.Path]::GetDirectoryName($ExtractPath)
+	if (-not (Test-Path -Path $ExtractDirectory)) {
+		New-Item -ItemType Directory -Path $ExtractDirectory
+	}
+
+	# Download the MSI file
+	Invoke-WebRequest -Uri $Url -OutFile $DownloadPath
+	Write-Host "Download complete: $DownloadPath"
+
+	# Extract the MSI contents
+	Start-Process msiexec.exe -ArgumentList "/a `"$DownloadPath`" /qb TARGETDIR=`"$ExtractPath`"" -NoNewWindow -Wait
+	Write-Host "Extraction complete: $ExtractPath"
+
+}
+
+if (-not (Test-Path "release")) {
+    New-Item -Path "release" -ItemType Directory -Force | Out-Null
+}
+setup-zulu
 patch "youtube" "revanced-extended"
