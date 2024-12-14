@@ -2,9 +2,15 @@
 Run "cmd.exe"
 WinWaitActive "ahk_class ConsoleWindowClass"
 
+; Sleep for 1 second (1000 ms) before killing Command Prompt
+Sleep 1000
+
 ; Kill the Command Prompt process
 Run "taskkill /IM cmd.exe /F", , "Hide"
 WinWaitClose "ahk_class ConsoleWindowClass" ; Wait for the command window to close
+
+; Sleep for 1 second after killing Command Prompt
+Sleep 2000
 
 ; Reopen Command Prompt
 Run "cmd.exe"
