@@ -45,10 +45,6 @@ jobs:
             download/*.apk
             download/*.rvp
             download/*.jar
-      - name: Releasing APK files
-        id: release-rve
-        if: steps.check-gh-rve.outputs.internet_error == '0'
-        uses: ./.github/actions/release
   patch_rve_:
     name: Patch Revanced Extended Stable
     needs: patch_rve
