@@ -13,7 +13,6 @@ function patch {
 }
 
 Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
-Get-Process -Name cmd -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
 #$global:progressPreference = 'silentlyContinue'
 #Start-Sleep -s 400
 #patch "youtube" "revanced-extended"
