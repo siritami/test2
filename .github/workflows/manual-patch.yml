@@ -60,7 +60,9 @@ jobs:
       - name: Patch apk
         id: patch-rve
         run: |
-          src/build/Revanced-Extended.ps1
+          Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
+          $global:progressPreference = 'silentlyContinue'
+          Start-Sleep -s 400
       - name: Cache
         uses: actions/upload-artifact@v4
         with:
