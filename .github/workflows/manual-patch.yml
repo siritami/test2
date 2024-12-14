@@ -61,7 +61,7 @@ jobs:
         uses: ./.github/actions/preparing
       - name: Patch apk
         id: patch-rve
-        run: bash src/build/Revanced-Extended.ps1
+        run: powershell.exe src/build/Revanced-Extended.ps1
       - name: Cache
         uses: actions/download-artifact@v4
         with:
