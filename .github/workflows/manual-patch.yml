@@ -43,6 +43,8 @@ jobs:
           name: Cache-apk
           path: |
             download/*.apk
+            download/*.rvp
+            download/*.jar
       - name: Releasing APK files
         id: release-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
