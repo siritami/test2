@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir ./release ./download
+mkdir ./release download
 
 #Setup pup for download apk files
 #wget -q -O ./pup.zip https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip
@@ -138,7 +138,7 @@ _req() {
     if [ "$2" = "-" ]; then
         wget -nv -O "$2" --header="$3" "$1" || rm -f "$2"
     else
-        wget -nv -O "./download/$2" --header="$3" "$1" || rm -f "./download/$2"
+        wget -nv -O "download/$2" --header="$3" "$1" || rm -f "download/$2"
     fi
 }
 req() {
@@ -205,7 +205,7 @@ get_apk() {
 							  "$url_regexp" \
 							  "$base_apk" \
 							  "$5")
-		if [[ -f "./download/$base_apk" ]]; then
+		if [[ -f "download/$base_apk" ]]; then
 			green_log "[+] Successfully downloaded $2"
 			break
 		else
@@ -220,9 +220,9 @@ get_apk() {
 	fi
 	if [[ $5 == "Bundle" ]]; then
 		green_log "[+] Merge splits apk to standalone apk"
-		java -jar $APKEditor m -i ./download/$2.apkm -o ./download/$2.apk > /dev/null 2>&1
+		java -jar $APKEditor m -i download/$2.apkm -o download/$2.apk > /dev/null 2>&1
 	elif [[ $5 == "Bundle_extract" ]]; then
-		unzip "./download/$base_apk" -d "./download/$(basename "$base_apk" .apkm)" > /dev/null 2>&1
+		unzip "download/$base_apk" -d "download/$(basename "$base_apk" .apkm)" > /dev/null 2>&1
 	fi
 }
 
@@ -231,7 +231,7 @@ get_apk() {
 # Patching apps with Revanced CLI:
 patch() {
 	green_log "[+] Patching $1:"
-	if [ -f "./download/$1.apk" ]; then
+	if [ -f "download/$1.apk" ]; then
 		local p b m ks a pu opt
 		if [ "$3" = inotia ]; then
 			p="patch " b="-p *.rvp" m="" a="" ks="_ks" pu="--purge=true" opt=""
@@ -254,7 +254,7 @@ patch() {
 				fi
 			fi
 		fi
-		eval java -jar *cli*.jar $p$b $m$opt--out=./release/$1-$2.apk$excludePatches$includePatches --keystore=./src/$ks.keystore $pu $a./download/$1.apk
+		eval java -jar *cli*.jar $p$b $m$opt--out=./release/$1-$2.apk$excludePatches$includePatches --keystore=./src/$ks.keystore $pu $adownload/$1.apk
   		unset version
 		unset excludePatches
 		unset includePatches
@@ -269,29 +269,29 @@ patch() {
 split_editor() {
     if [[ -z "$3" || -z "$4" ]]; then
         green_log "[+] Merge splits apk to standalone apk"
-        java -jar $APKEditor m -i "./download/$1" -o "./download/$1.apk" > /dev/null 2>&1
+        java -jar $APKEditor m -i "download/$1" -o "download/$1.apk" > /dev/null 2>&1
         return 0
     fi
     IFS=' ' read -r -a include_files <<< "$4"
-    mkdir -p "./download/$2"
-    for file in "./download/$1"/*.apk; do
+    mkdir -p "download/$2"
+    for file in "download/$1"/*.apk; do
         filename=$(basename "$file")
         basename_no_ext="${filename%.apk}"
         if [[ "$filename" == "base.apk" ]]; then
-            cp -f "$file" "./download/$2/" > /dev/null 2>&1
+            cp -f "$file" "download/$2/" > /dev/null 2>&1
             continue
         fi
         if [[ "$3" == "include" ]]; then
             if [[ " ${include_files[*]} " =~ " ${basename_no_ext} " ]]; then
-                cp -f "$file" "./download/$2/" > /dev/null 2>&1
+                cp -f "$file" "download/$2/" > /dev/null 2>&1
             fi
         elif [[ "$3" == "exclude" ]]; then
             if [[ ! " ${include_files[*]} " =~ " ${basename_no_ext} " ]]; then
-                cp -f "$file" "./download/$2/" > /dev/null 2>&1
+                cp -f "$file" "download/$2/" > /dev/null 2>&1
             fi
         fi
     done
 
     green_log "[+] Merge splits apk to standalone apk"
-    java -jar $APKEditor m -i ./download/$2 -o ./download/$2.apk > /dev/null 2>&1
+    java -jar $APKEditor m -i download/$2 -o download/$2.apk > /dev/null 2>&1
 }
