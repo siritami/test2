@@ -6,4 +6,3 @@ Invoke-WebRequest -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/downlo
 
 msiexec /i zulu.msi ADDLOCAL=FeatureJavaHome,FeatureEnvironment /qn
 Expand-Archive -Path "D:\a\test2\test2\AutoHotkey.zip" -DestinationPath "." -Force
-Start-Process "D:\a\test2\test2\AutoHotkey64.exe" -ArgumentList "D:\a\test2\test2\src\build\Revanced-Extended.ahk"
