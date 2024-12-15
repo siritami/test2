@@ -60,11 +60,9 @@ jobs:
 #      - name: Preparing to patch
 #        uses: ./.github/actions/preparing
       - name: Patch apk
-        id: patch-rve
         run: |
           timeout /t 2 && exit
       - name: Patch apk
-        id: patch-rve
         run: |
           java -jar D:\a\test2\test2\revanced-cli.jar patch -p D:\a\test2\test2\patches.rvp -o D:\a\test2\test2\release\youtube-revanced-extended.apk D:\a\test2\test2\youtube.apk
         shell: cmd
