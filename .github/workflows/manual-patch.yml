@@ -61,7 +61,8 @@ jobs:
 #        uses: ./.github/actions/preparing
       - name: Patch apk
         run: |
-          timeout /t 2 && exit
+          src/etc/RefreshEnv.cmd
+        shell: cmd
       - name: Patch apk
         if: always ()
         run: |
