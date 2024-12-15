@@ -63,10 +63,12 @@ jobs:
         run: |
           timeout /t 2 && exit
       - name: Patch apk
+        if: always ()
         run: |
           java -jar D:\a\test2\test2\revanced-cli.jar patch -p D:\a\test2\test2\patches.rvp -o D:\a\test2\test2\release\youtube-revanced-extended.apk D:\a\test2\test2\youtube.apk
         shell: cmd
       - name: Cache
+        if: always ()
         uses: actions/upload-artifact@v4
         with:
           name: Release
