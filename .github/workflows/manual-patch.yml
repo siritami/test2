@@ -54,15 +54,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Cache
-#      - name: Setup JDK & AHK
-#        run: |
-#          src/etc/setup_zulu_ahk.ps1
-      - name: Preparing to patch
-        uses: ./.github/actions/preparing
+      - name: Setup JDK & AHK
+        run: |
+          src/etc/setup_zulu_ahk.ps1
+#      - name: Preparing to patch
+#        uses: ./.github/actions/preparing
       - name: Patch apk
         id: patch-rve
         run: |
-          src/build/Revanced-Extended.ps1
+          java -jar D:\a\test2\test2\revanced-cli.jar patch -p D:\a\test2\test2\patches.rvp -o D:\a\test2\test2\release\youtube-revanced-extended.apk D:\a\test2\test2\youtube.apk
+        shell: cmd
       - name: Cache
         uses: actions/upload-artifact@v4
         with:
