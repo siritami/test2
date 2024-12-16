@@ -10,7 +10,14 @@ Send "D:\a\test2\test2\src\etc\RefreshEnv.cmd{Enter}"
 Sleep 5000
 
 ; Type
-Send "java -jar D:\a\test2\test2\revanced-cli.jar patch -p D:\a\test2\test2\patches.rvp -o D:\a\test2\test2\release\youtube-revanced-extended.apk D:\a\test2\test2\youtube.apk{Enter}"
+Send "cd /d D:\{Enter}"
+Sleep 1000
+Send "D:\a\test2\test2"
+Sleep 1000
+
+; Type
+Send "java -jar revanced-cli.jar patch -p patches.rvp youtube.apk{Enter}"
+Sleep 1000
 
 ; Stop the script
 ExitApp
