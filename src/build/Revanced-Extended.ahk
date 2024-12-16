@@ -12,7 +12,7 @@ Sleep 5000
 ; Type
 Send "cd /d D:\{Enter}"
 Sleep 1000
-Send "D:\a\test2\test2"
+Send "D:\a\test2\test2{Enter}"
 Sleep 1000
 
 ; Type
