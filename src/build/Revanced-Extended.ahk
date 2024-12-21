@@ -9,6 +9,9 @@ Sleep 2000
 Send "D:\a\test2\test2\src\etc\RefreshEnv.cmd{Enter}"
 Sleep 5000
 
+Send "set GITHUB_REPOSITORY={Enter}"
+Sleep 2000
+
 ; Type
 Send "cd /d D:\{Enter}"
 Sleep 1000
