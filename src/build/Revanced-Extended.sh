@@ -11,8 +11,7 @@ revanced_dl(){
 	revanced_dl
 	# Patch YouTube:
 	get_patches_key "youtube-revanced-extended"
-	get_apk "com.google.android.youtube" "youtube" "youtube" "google-inc/youtube/youtube" "Bundle_extract"
-	split_editor "youtube" "youtube"
+	get_apk "com.google.android.youtube" "youtube" "youtube" "google-inc/youtube/youtube"
 	mv *.rvp download/patches.rvp
 	mv *cli* download/revanced-cli.jar
 }
