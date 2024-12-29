@@ -1,46 +1,85 @@
 #!/bin/bash
 
-# Check if running with sudo
-if [ "$(id -u)" != "0" ]; then
-    echo "Please run this script with sudo."
-    exit 1
-fi
+# Variables
+IPV4_URL="https://www.cloudflare.com/ips-v4/"
+IPV6_URL="https://www.cloudflare.com/ips-v6/"
+SOCKS5_PORT=9090
+SOCKS5_INTERFACE="wlan0"  # Interface for routing via proxy
+INTERNET_INTERFACE="wlan1"  # Default internet-facing interface
 
-# Install necessary packages
-apt-get update
-apt-get install -y wget socat iproute2
+# Temporary files for IP lists
+IPV4_LIST="/tmp/cloudflare_ipv4.txt"
+IPV6_LIST="/tmp/cloudflare_ipv6.txt"
 
-# Download IPv4 and IPv6 ranges from Cloudflare
-wget -qO cf_ipv4.txt https://www.cloudflare.com/ips-v4/
-wget -qO cf_ipv6.txt https://www.cloudflare.com/ips-v6/
+# Functions
+function download_ip_lists {
+    echo "Downloading Cloudflare IP lists..."
+    curl -s "$IPV4_URL" -o "$IPV4_LIST"
+    curl -s "$IPV6_URL" -o "$IPV6_LIST"
+    echo "Downloaded IP lists."
+}
 
-# Find the correct network interface
-network_interface="rmnet_ipa0"  # Replace with the correct interface if needed
+function setup_routes {
+    echo "Setting up routes for Cloudflare IP ranges..."
 
-# Read IPv4 addresses and add routing rules
-while IFS= read -r ip; do
-    ip route add "$ip" dev "$network_interface"
-done < cf_ipv4.txt
+    # Add routes for IPv4 ranges
+    while read -r ip_range; do
+        [[ -z "$ip_range" ]] && continue
+        ip route add "$ip_range" dev "$SOCKS5_INTERFACE" || echo "Failed to add IPv4 route: $ip_range"
+    done < "$IPV4_LIST"
 
-# Read IPv6 addresses and add routing rules
-while IFS= read -r ip; do
-    ip -6 route add "$ip" dev "$network_interface"
-done < cf_ipv6.txt
+    # Add routes for IPv6 ranges
+    while read -r ip_range; do
+        [[ -z "$ip_range" ]] && continue
+        ip -6 route add "$ip_range" dev "$SOCKS5_INTERFACE" || echo "Failed to add IPv6 route: $ip_range"
+    done < "$IPV6_LIST"
 
-# Start a SOCKS5 proxy on port 9090 using socat
-socat TCP-LISTEN:9090,fork SOCKS4A:localhost:127.0.0.1:%host%:80,socksport=9050 &
+    echo "Routes setup completed."
+}
 
-# Pause script after completing setup
-read -rp "Press Enter to stop proxy and clean up routing rules..."
+function start_socks5_proxy {
+    echo "Starting SOCKS5 proxy on port $SOCKS5_PORT..."
 
-# Clean up routing rules
-while IFS= read -r ip; do
-    ip route del "$ip" dev "$network_interface"
-done < cf_ipv4.txt
+    # Use `ssh` to set up a SOCKS5 proxy (ensure SSH server is installed and configured)
+    ssh -N -D "$SOCKS5_PORT" "localhost" &
 
-while IFS= read -r ip; do
-    ip -6 route del "$ip" dev "$network_interface"
-done < cf_ipv6.txt
+    SOCKS5_PID=$!
+    echo "SOCKS5 proxy started with PID $SOCKS5_PID."
 
-# Kill the socat process
-pkill socat
+    # Save PID for cleanup
+    echo "$SOCKS5_PID" > /tmp/socks5_proxy.pid
+}
+
+function cleanup {
+    echo "Cleaning up routes and proxy..."
+
+    # Remove routes for IPv4
+    while read -r ip_range; do
+        [[ -z "$ip_range" ]] && continue
+        ip route del "$ip_range" dev "$SOCKS5_INTERFACE" 2>/dev/null
+    done < "$IPV4_LIST"
+
+    # Remove routes for IPv6
+    while read -r ip_range; do
+        [[ -z "$ip_range" ]] && continue
+        ip -6 route del "$ip_range" dev "$SOCKS5_INTERFACE" 2>/dev/null
+    done < "$IPV6_LIST"
+
+    # Stop SOCKS5 proxy
+    if [[ -f /tmp/socks5_proxy.pid ]]; then
+        kill $(cat /tmp/socks5_proxy.pid) 2>/dev/null
+        rm -f /tmp/socks5_proxy.pid
+    fi
+
+    echo "Cleanup completed."
+}
+
+# Main script
+trap cleanup EXIT
+
+download_ip_lists
+setup_routes
+start_socks5_proxy
+
+# Pause script
+read -p "Script completed. Press Enter to exit..."
